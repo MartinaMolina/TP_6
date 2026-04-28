@@ -1,16 +1,9 @@
 # TP 6 - PROG4
 
-Proyecto basado en TP5 y adaptado al TP6 (React Router + CRUD multipantalla).
-
 ## Estructura
 
 - `backend/` API Node.js + Express + PostgreSQL
 - `frontend/` React + TypeScript + React Router
-
-## Requisitos (modo local)
-
-- PostgreSQL instalado
-- Node.js instalado
 
 ## Base de datos
 
