@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import ParticipanteCard from '../components/ParticipanteCard';
@@ -35,6 +35,13 @@ function HomePage() {
     modalidad: 'Todas'
   });
 
+  const [paginaActual, setPaginaActual] = useState(1);
+  const itemsPorPagina = 12;
+
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [filtros]);
+
   const participantesFiltrados = useMemo(() => {
     return participantes.filter((p) => {
       const participanteNormalizado = normalizarParticipante(p);
@@ -47,6 +54,10 @@ function HomePage() {
       return matchNombre && matchNivel && matchMod;
     });
   }, [participantes, filtros]);
+
+  const totalPaginas = Math.ceil(participantesFiltrados.length / itemsPorPagina);
+  const inicio = (paginaActual - 1) * itemsPorPagina;
+  const participantesPaginados = participantesFiltrados.slice(inicio, inicio + itemsPorPagina);
 
   return (
     <div>
@@ -78,8 +89,8 @@ function HomePage() {
 
       <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <AnimatePresence mode="popLayout">
-          {participantesFiltrados.length > 0 ? (
-            participantesFiltrados.map((p) => <ParticipanteCard key={p.id} p={p} />)
+          {participantesPaginados.length > 0 ? (
+            participantesPaginados.map((p) => <ParticipanteCard key={p.id} p={p} />)
           ) : (
             <div className="col-span-full py-20 text-center border-2 border-dashed border-gray-300 rounded-xl bg-white">
               <p className="text-gray-500 italic">
@@ -89,6 +100,28 @@ function HomePage() {
           )}
         </AnimatePresence>
       </motion.div>
+
+      {totalPaginas > 1 && (
+        <div className="flex justify-center items-center mt-8 mb-4 gap-4">
+          <button
+            onClick={() => setPaginaActual((p) => Math.max(1, p - 1))}
+            disabled={paginaActual === 1}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50 hover:bg-gray-300 transition font-semibold"
+          >
+            Anterior
+          </button>
+          <span className="text-gray-600 font-medium">
+            Página {paginaActual} de {totalPaginas}
+          </span>
+          <button
+            onClick={() => setPaginaActual((p) => Math.min(totalPaginas, p + 1))}
+            disabled={paginaActual === totalPaginas}
+            className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50 hover:bg-gray-300 transition font-semibold"
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
     </div>
   );
 }

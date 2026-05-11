@@ -10,10 +10,10 @@ function App() {
   const { error, limpiarError } = useParticipantes();
 
   const linkClassName = ({ isActive }: { isActive: boolean }) =>
-    `px-3 py-2 rounded-lg text-sm font-semibold transition ${
+    `block px-4 py-2.5 mx-2 my-1 rounded-lg text-sm font-semibold transition ${
       isActive
         ? 'bg-blue-600 text-white'
-        : 'text-blue-900 hover:bg-blue-100'
+        : 'text-slate-700 hover:bg-slate-100 hover:text-blue-900'
     }`;
 
   return (
@@ -30,44 +30,45 @@ function App() {
               </p>
             </Link>
 
-            <button
-              type="button"
-              className="md:hidden px-3 py-2 rounded-lg border border-slate-300 text-blue-900 font-bold"
-              onClick={() => setMenuAbierto((valorActual) => !valorActual)}
-              aria-label="Abrir menu"
-              aria-expanded={menuAbierto}
-            >
-              {menuAbierto ? 'X' : 'MENU'}
-            </button>
+            <div className="relative">
+              <button
+                type="button"
+                className="p-2 rounded-lg text-blue-900 hover:bg-slate-100 transition focus:outline-none focus:ring-2 focus:ring-blue-600"
+                onClick={() => setMenuAbierto((valorActual) => !valorActual)}
+                aria-label="Alternar menú"
+                aria-expanded={menuAbierto}
+              >
+                {!menuAbierto ? (
+                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                ) : (
+                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                )}
+              </button>
 
-            <nav className="hidden md:flex items-center gap-2">
-              <NavLink to="/" className={linkClassName}>
-                Participantes
-              </NavLink>
-              <NavLink to="/nuevo" className={linkClassName}>
-                Nuevo
-              </NavLink>
-            </nav>
+              {menuAbierto && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-2 flex flex-col z-50">
+                  <NavLink
+                    to="/"
+                    className={linkClassName}
+                    onClick={() => setMenuAbierto(false)}
+                  >
+                    Participantes
+                  </NavLink>
+                  <NavLink
+                    to="/nuevo"
+                    className={linkClassName}
+                    onClick={() => setMenuAbierto(false)}
+                  >
+                    Nuevo
+                  </NavLink>
+                </div>
+              )}
+            </div>
           </div>
-
-          {menuAbierto && (
-            <nav className="md:hidden mt-3 flex flex-col gap-2 border-t border-slate-200 pt-3">
-              <NavLink
-                to="/"
-                className={linkClassName}
-                onClick={() => setMenuAbierto(false)}
-              >
-                Participantes
-              </NavLink>
-              <NavLink
-                to="/nuevo"
-                className={linkClassName}
-                onClick={() => setMenuAbierto(false)}
-              >
-                Nuevo
-              </NavLink>
-            </nav>
-          )}
         </div>
       </header>
 
